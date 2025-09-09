@@ -1,44 +1,46 @@
-import { useState } from "react"
-import { useWorkoutContext } from "../hooks/useWorkoutContext"
+import { useState } from "react";
+import { useWorkoutContext } from "../hooks/useWorkoutContext";
 
-const WorkoutForm = () => {
-  const { dispatch } = useWorkoutContext()
-  const [title, setTitle] = useState("")
-  const [load, setLoad] = useState("")
-  const [reps, setReps] = useState("")
-  const [error, setError] = useState(null)
-  const [emptyField, setEmptyField] = useState([])
-  
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    const workout = { title, load, reps }
+const API = import.meta.env.VITE_API_URL; // https://.../api
 
-    const res = await fetch("/api/workouts", {
-      method: "POST",
-      body: JSON.stringify(workout),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
+export default function WorkoutForm() {
+  const { dispatch } = useWorkoutContext();
+  const [title, setTitle] = useState("");
+  const [load, setLoad] = useState("");
+  const [reps, setReps] = useState("");
+  const [error, setError] = useState(null);
+  const [emptyFields, setEmptyFields] = useState([]);
 
-    const json = await res.json()
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const workout = { title, load, reps };
 
-    console.log(json)
-    
-    if (!res.ok) {
-      setError(json.error)
-      setEmptyField(json.emptyField)
-      console.log(json.emptyField)
-    }
+    try {
+      const res = await fetch(`${API}/workouts`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(workout),
+      });
 
-    if (res.ok) {
-      setTitle("")
-      setLoad("")
-      setReps("")
-      setError(null)
-      setEmptyField([])
-      console.log(json)
-      dispatch({ type: 'CREATE_WORKOUT', payload: json})
+      const json = await res.json();
+      console.log(json);
+
+      if (!res.ok) {
+        setError(json.error || "Failed to add workout");
+        setEmptyFields(json.emptyFields || []);
+        return;
+      }
+
+      // success
+      setTitle("");
+      setLoad("");
+      setReps("");
+      setError(null);
+      setEmptyFields([]);
+      dispatch({ type: "CREATE_WORKOUT", payload: json });
+    } catch (err) {
+      console.error("API error:", err);
+      setError("Network error. Please try again.");
     }
   }
 
@@ -53,35 +55,41 @@ const WorkoutForm = () => {
           <div>
             <label className="block mb-1 text-sm text-gray-600">Title</label>
             <input
-              onChange={(e) => setTitle(e.target.value)}
               type="text"
               value={title}
+              onChange={(e) => setTitle(e.target.value)}
               placeholder="Bench Press"
-              className="w-full px-3 py-1.5 border rounded-md text-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none"
+              className={`w-full px-3 py-1.5 border rounded-md text-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none ${
+                emptyFields.includes("title") ? "border-red-500" : ""
+              }`}
             />
           </div>
 
           <div>
             <label className="block mb-1 text-sm text-gray-600">Load (kg)</label>
             <input
-              onChange={(e) => setLoad(Number(e.target.value))}
               type="number"
-              value={load}
-              placeholder="60"
               min={1}
-              className="w-full px-3 py-1.5 border rounded-md text-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none"
+              value={load}
+              onChange={(e) => setLoad(Number(e.target.value))}
+              placeholder="60"
+              className={`w-full px-3 py-1.5 border rounded-md text-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none ${
+                emptyFields.includes("load") ? "border-red-500" : ""
+              }`}
             />
           </div>
 
           <div>
             <label className="block mb-1 text-sm text-gray-600">Reps</label>
             <input
-              onChange={(e) => setReps(Number(e.target.value))}
               type="number"
-              value={reps}
-              placeholder="10"
               min={1}
-              className="w-full px-3 py-1.5 border rounded-md text-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none"
+              value={reps}
+              onChange={(e) => setReps(Number(e.target.value))}
+              placeholder="10"
+              className={`w-full px-3 py-1.5 border rounded-md text-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none ${
+                emptyFields.includes("reps") ? "border-red-500" : ""
+              }`}
             />
           </div>
 
@@ -100,7 +108,5 @@ const WorkoutForm = () => {
         </form>
       </div>
     </div>
-  )
+  );
 }
-
-export default WorkoutForm
