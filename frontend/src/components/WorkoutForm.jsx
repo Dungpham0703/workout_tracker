@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { useWorkoutContext } from "../hooks/useWorkoutContext";
 
-const API = import.meta.env.VITE_API_URL; // https://.../api
-
 export default function WorkoutForm() {
   const { dispatch } = useWorkoutContext();
+
   const [title, setTitle] = useState("");
   const [load, setLoad] = useState("");
   const [reps, setReps] = useState("");
@@ -13,13 +12,14 @@ export default function WorkoutForm() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+
     const workout = { title, load, reps };
 
     try {
-      const res = await fetch(`${API}/workouts`, {
+      const res = await fetch("/api/workouts", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(workout),
+        headers: { "Content-Type": "application/json" },
       });
 
       const json = await res.json();
@@ -31,7 +31,6 @@ export default function WorkoutForm() {
         return;
       }
 
-      // success
       setTitle("");
       setLoad("");
       setReps("");
@@ -39,8 +38,8 @@ export default function WorkoutForm() {
       setEmptyFields([]);
       dispatch({ type: "CREATE_WORKOUT", payload: json });
     } catch (err) {
-      console.error("API error:", err);
-      setError("Network error. Please try again.");
+      console.error("Submit error:", err.message);
+      setError("Something went wrong. Please try again.");
     }
   }
 
@@ -59,9 +58,8 @@ export default function WorkoutForm() {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Bench Press"
-              className={`w-full px-3 py-1.5 border rounded-md text-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none ${
-                emptyFields.includes("title") ? "border-red-500" : ""
-              }`}
+              className={`w-full px-3 py-1.5 border rounded-md text-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none
+                ${emptyFields.includes("title") ? "border-red-500" : "border-gray-300"}`}
             />
           </div>
 
@@ -69,13 +67,12 @@ export default function WorkoutForm() {
             <label className="block mb-1 text-sm text-gray-600">Load (kg)</label>
             <input
               type="number"
-              min={1}
               value={load}
+              min={1}
               onChange={(e) => setLoad(Number(e.target.value))}
               placeholder="60"
-              className={`w-full px-3 py-1.5 border rounded-md text-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none ${
-                emptyFields.includes("load") ? "border-red-500" : ""
-              }`}
+              className={`w-full px-3 py-1.5 border rounded-md text-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none
+                ${emptyFields.includes("load") ? "border-red-500" : "border-gray-300"}`}
             />
           </div>
 
@@ -83,13 +80,12 @@ export default function WorkoutForm() {
             <label className="block mb-1 text-sm text-gray-600">Reps</label>
             <input
               type="number"
-              min={1}
               value={reps}
+              min={1}
               onChange={(e) => setReps(Number(e.target.value))}
               placeholder="10"
-              className={`w-full px-3 py-1.5 border rounded-md text-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none ${
-                emptyFields.includes("reps") ? "border-red-500" : ""
-              }`}
+              className={`w-full px-3 py-1.5 border rounded-md text-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none
+                ${emptyFields.includes("reps") ? "border-red-500" : "border-gray-300"}`}
             />
           </div>
 

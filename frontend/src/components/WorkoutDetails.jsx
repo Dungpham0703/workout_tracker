@@ -2,31 +2,26 @@ import { useWorkoutContext } from "../hooks/useWorkoutContext";
 import { Trash2 } from "lucide-react";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 
-const API = import.meta.env.VITE_API_URL; // e.g. https://workout-tracker.vercel.app/api
-
 export default function WorkoutDetails({ workout }) {
   const { dispatch } = useWorkoutContext();
 
   async function handleDelete() {
     try {
-      const res = await fetch(`${API}/workouts/${workout._id}`, {
+      const res = await fetch(`/api/workouts/${workout._id}`, {
         method: "DELETE",
-        headers: { "Content-Type": "application/json" },
       });
 
-      // Nếu server trả body rỗng thì tránh .json() bị lỗi
-      const text = await res.text();
-      const json = text ? JSON.parse(text) : null;
+      const json = await res.json();
       console.log(json);
 
       if (!res.ok) {
-        throw new Error(json?.error || `Delete failed (${res.status})`);
+        throw new Error(json.error || "Failed to delete workout");
       }
 
       dispatch({ type: "DELETE_WORKOUT", payload: workout });
     } catch (err) {
-      console.error(err);
-      alert(err.message || "Delete failed");
+      console.error("Delete error:", err.message);
+      alert("Could not delete workout. Please try again.");
     }
   }
 
@@ -35,8 +30,6 @@ export default function WorkoutDetails({ workout }) {
       <button
         onClick={handleDelete}
         className="absolute text-red-500 top-3 right-3 hover:text-red-700"
-        aria-label="Delete workout"
-        title="Delete workout"
       >
         <Trash2 size={20} />
       </button>
@@ -54,7 +47,9 @@ export default function WorkoutDetails({ workout }) {
       </p>
 
       <p className="mt-2 text-sm text-gray-500">
-        {formatDistanceToNow(new Date(workout.createdAt), { addSuffix: true })}
+        {formatDistanceToNow(new Date(workout.createdAt), {
+          addSuffix: true,
+        })}
       </p>
     </div>
   );

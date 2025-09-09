@@ -17,27 +17,21 @@ app.use((req, res, next) => {
 // routes
 app.use('/api/workouts', workoutRoutes);
 
-// health check route (để test Vercel hoạt động)
+// health check route
 app.get('/api/health', (req, res) => {
   res.json({ ok: true });
 });
 
-// connect to database
+// connect to database and start server
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
-    console.log('Connected to MongoDB');
-    // ❗️Chỉ lắng nghe khi chạy LOCAL, không listen khi chạy trên Vercel
-    if (!process.env.VERCEL) {
-      const port = process.env.PORT || 4000;
-      app.listen(port, () => {
-        console.log('Server running on port', port);
-      });
-    }
+    console.log('✅ Connected to MongoDB');
+    const port = process.env.PORT || 4000;
+    app.listen(port, () => {
+      console.log('🚀 Server running on port', port);
+    });
   })
   .catch((error) => {
-    console.error(error);
+    console.error('❌ MongoDB connection error:', error);
   });
-
-// Export app cho Vercel dùng
-module.exports = app;
