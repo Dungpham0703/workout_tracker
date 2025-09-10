@@ -24,9 +24,11 @@ The application provides core functionalities for users to easily manage their w
 
 The project is organized into two main directories for a clean separation of concerns:
 
+```bash
 workout-tracker/
 ├── frontend/ # React + Vite + TailwindCSS source code
 └── backend/  # Node.js + Express + MongoDB source code
+```
 ---
 
 ## 🚀 Getting Started
