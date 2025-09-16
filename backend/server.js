@@ -11,10 +11,11 @@ const app = express();
 // Middleware
 app.use(express.json());
 
-const cors = require('cors');
-app.use(cors());
-app.options('*', cors());
-
+app.use(cors({
+  origin: ['http://localhost:5173','https://workout-tracker-xeiz.vercel.app'],
+  methods: ['GET','POST','PATCH','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type'],
+}));
 
 // Logger nhỏ cho request
 app.use((req, res, next) => {
