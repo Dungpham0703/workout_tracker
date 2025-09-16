@@ -11,7 +11,6 @@ const app = express();
 // Middleware
 app.use(express.json());
 
-// CORS: cho local + FE deploy
 app.use(cors({
   origin: [
     'http://localhost:5173',                   

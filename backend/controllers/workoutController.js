@@ -1,110 +1,107 @@
-const Workout = require('../models/workoutModel')
-const mongoose = require('mongoose')
+const Workout = require('../models/workoutModel');
+const mongoose = require('mongoose');
 
-// get all workouts
+// GET /api/workouts
 const getWorkouts = async (req, res) => {
-    const workouts = await Workout.find({}).sort({createAt: -1})
-    res.status(200).json(workouts)
-}
-// get a single workouts
+  try {
+    // sort theo createdAt mới nhất
+    const workouts = await Workout.find({}).sort({ createdAt: -1 });
+    return res.status(200).json(workouts);
+  } catch (err) {
+    console.error('getWorkouts error:', err.message);
+    return res.status(500).json({ error: 'Server error' });
+  }
+};
+
+// GET /api/workouts/:id
 const get_single_Workout = async (req, res) => {
-    const {id} = req.params
+  try {
+    const { id } = req.params;
 
-    if(!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({err: 'No such workouts for this id'})
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid workout id' });
     }
 
-    const workout = await Workout.findById(id)    
-    
-    return res.status(200).json(workout)
-}
-//create new workout
+    const workout = await Workout.findById(id);
+    if (!workout) {
+      return res.status(404).json({ error: 'Workout not found' });
+    }
+
+    return res.status(200).json(workout);
+  } catch (err) {
+    console.error('get_single_Workout error:', err.message);
+    return res.status(500).json({ error: 'Server error' });
+  }
+};
+
+// POST /api/workouts
 const createWorkout = async (req, res) => {
-    const {title, load, reps} = req.body
+  try {
+    const { title, load, reps } = req.body;
 
-    let emptyFields = []
+    const emptyFields = [];
+    if (!title) emptyFields.push('title');
+    if (load === '' || load === undefined || load === null) emptyFields.push('load');
+    if (reps === '' || reps === undefined || reps === null) emptyFields.push('reps');
 
-    if (!title) emptyFields.push('title')
-    
-    if (!load) emptyFields.push('load')
-
-    if (!reps) emptyFields.push('reps')
-
-    if (emptyFields.length > 0 ) {
-        res.status(400).json({error : 'Please fill all the fields', emptyFields})
+    if (emptyFields.length > 0) {
+      return res.status(400).json({ error: 'Please fill all the fields', emptyFields });
     }
-    
-    // add doc to database
-    try {
-        const workout = await Workout.create({title, load, reps})
-        res.status(200).json(workout)
-    } catch (error){
-        res.status(400).json({error: error.message})
-    }
-}
 
-//delete a workout
+    const workout = await Workout.create({ title, load, reps });
+    return res.status(201).json(workout);
+  } catch (err) {
+    console.error('createWorkout error:', err.message);
+    return res.status(400).json({ error: err.message });
+  }
+};
+
+// DELETE /api/workouts/:id
 const delete_Workout = async (req, res) => {
-    const {id} = req.params
-    
-    if(!mongoose.Types.ObjectId.isValid(id)){
-        res.status(404).json({err: 'No such workout to delete'})
-    }
-        await Workout.findByIdAndDelete({_id: id})
-        res.status(200).json({mess: 'Finish delete the workout'})
-}
+  try {
+    const { id } = req.params;
 
-//update a workout
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid workout id' });
+    }
+
+    const deleted = await Workout.findByIdAndDelete(id);
+    if (!deleted) {
+      return res.status(404).json({ error: 'Workout not found' });
+    }
+
+    return res.status(200).json({ message: 'Deleted', id: deleted._id });
+  } catch (err) {
+    console.error('delete_Workout error:', err.message);
+    return res.status(500).json({ error: 'Server error' });
+  }
+};
+
+// PATCH /api/workouts/:id
 const update_Workout = async (req, res) => {
-    const {id} = req.params
+  try {
+    const { id } = req.params;
 
-    if(!mongoose.Types.ObjectId.isValid(id)){
-        res.status(404).json({err: 'No such the workout to update'})
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid workout id' });
     }
 
-    const workout = await Workout.findByIdAndUpdate({_id: id}, {
-        ...req.body
-    })
-
-    if(!workout){
-        res.status(404).json({err: 'You need to add the changes'})
+    const updated = await Workout.findByIdAndUpdate(id, { ...req.body }, { new: true });
+    if (!updated) {
+      return res.status(404).json({ error: 'Workout not found' });
     }
 
-    res.status(200).json(workout)
-}
-
-const updated_Workout = async (req, res) => {
-    const {id} = req.params
-    
-    if(!mongoose.Types.ObjectId.isValid(id)) {
-        res.status(404).json({message: 'No workout for this id'})
-    }
-
-    const workout = await Workout.findByIdAndUpdate({_id: id}, { ...req.body})
-
-    if(!workout) {
-        res.status(404).json({message: 'Nothing to update'})
-    }
-
-    res.status(200).json(workout)
-}
-
-const get_all_workout = async (req, res) => {
-    
-    const workout = await Workout.find()
-    
-    if(!workout) {
-        res.status(404).json({mess: 'No workout to respond'})
-    }
-
-    res.status(200).json(workout)
-
-}
+    return res.status(200).json(updated);
+  } catch (err) {
+    console.error('update_Workout error:', err.message);
+    return res.status(500).json({ error: 'Server error' });
+  }
+};
 
 module.exports = {
-    createWorkout,
-    getWorkouts,
-    get_single_Workout,
-    delete_Workout,
-    update_Workout
-}
+  createWorkout,
+  getWorkouts,
+  get_single_Workout,
+  delete_Workout,
+  update_Workout,
+};
