@@ -12,7 +12,7 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-  origin: ['http://localhost:5173','https://workout-tracker-xeiz.vercel.app'],
+  origin: ['http://localhost:5173','workout-tracker-thanh-dung.vercel.app'],
   methods: ['GET','POST','PATCH','DELETE','OPTIONS'],
   allowedHeaders: ['Content-Type'],
 }));
