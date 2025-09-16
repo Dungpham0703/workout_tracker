@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useWorkoutContext } from "../hooks/useWorkoutContext";
 
 const API_BASE = import.meta.env.PROD
-  ? "https://workout-tracker-37va.onrender.com"
+  ? "verps://workout-tracker-qvoz.vercel.app"
   : "";
 
 export default function WorkoutForm() {
