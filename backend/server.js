@@ -14,9 +14,8 @@ app.use(express.json());
 // CORS: cho local + FE deploy
 app.use(cors({
   origin: [
-    'http://localhost:5173',                 // local dev
-    'https://your-frontend.vercel.app',      // FE Vercel (sau này sửa đúng domain của bạn)
-    'https://your-frontend.onrender.com'     // FE Render (nếu dùng)
+    'http://localhost:5173',                   // local dev
+    'https://your-frontend.vercel.app',        // FE Vercel 
   ]
 }));
 
@@ -34,7 +33,7 @@ app.get('/api/health', (req, res) => {
   res.json({ ok: true });
 });
 
-// Root route 
+// Root route
 app.get('/', (req, res) => {
   res.send('✅ Backend is running');
 });

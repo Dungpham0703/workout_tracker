@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useWorkoutContext } from "../hooks/useWorkoutContext";
 
+const API_BASE = import.meta.env.PROD
+  ? "https://workout-tracker-37va.onrender.com"
+  : "";
+
 export default function WorkoutForm() {
   const { dispatch } = useWorkoutContext();
 
@@ -16,14 +20,13 @@ export default function WorkoutForm() {
     const workout = { title, load, reps };
 
     try {
-      const res = await fetch("/api/workouts", {
+      const res = await fetch(`${API_BASE}/api/workouts`, {
         method: "POST",
         body: JSON.stringify(workout),
         headers: { "Content-Type": "application/json" },
       });
 
       const json = await res.json();
-      console.log(json);
 
       if (!res.ok) {
         setError(json.error || "Failed to add workout");
@@ -31,11 +34,14 @@ export default function WorkoutForm() {
         return;
       }
 
+      // Reset form
       setTitle("");
       setLoad("");
       setReps("");
       setError(null);
       setEmptyFields([]);
+
+      // Update context
       dispatch({ type: "CREATE_WORKOUT", payload: json });
     } catch (err) {
       console.error("Submit error:", err.message);

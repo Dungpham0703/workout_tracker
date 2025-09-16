@@ -3,7 +3,10 @@ import WorkoutDetails from "../components/WorkoutDetails";
 import WorkoutForm from "../components/WorkoutForm";
 import { useWorkoutContext } from "../hooks/useWorkoutContext";
 
-const API = "/api/workouts";
+// Base API: production thì trỏ Render, dev thì để rỗng dùng proxy
+const API_BASE = import.meta.env.PROD
+  ? "https://workout-tracker-37va.onrender.com"
+  : "";
 
 export default function Home() {
   const { workouts, dispatch } = useWorkoutContext();
@@ -18,13 +21,16 @@ export default function Home() {
         setLoading(true);
         setError(null);
 
-        const res = await fetch(API, { signal: ctrl.signal });
+        const res = await fetch(`${API_BASE}/api/workouts`, {
+          signal: ctrl.signal,
+        });
         const data = await res.json();
 
         if (!res.ok) {
           throw new Error(data?.error || `Fetch failed (${res.status})`);
         }
 
+        // Sort theo thời gian tạo (mới nhất lên đầu)
         const sorted = Array.isArray(data)
           ? [...data].sort(
               (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
@@ -49,6 +55,7 @@ export default function Home() {
   return (
     <div className="px-6">
       <div className="grid items-start gap-6 lg:grid-cols-3">
+        {/* List workouts */}
         <div className="lg:col-span-2">
           {loading && (
             <div className="p-4 text-sm text-gray-600">Loading workouts…</div>
@@ -71,6 +78,7 @@ export default function Home() {
           ))}
         </div>
 
+        {/* Form thêm workout */}
         <div className="lg:col-span-1">
           <WorkoutForm />
         </div>
