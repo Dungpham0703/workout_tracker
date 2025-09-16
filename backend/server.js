@@ -14,8 +14,8 @@ app.use(express.json());
 // CORS: cho local + FE deploy
 app.use(cors({
   origin: [
-    'http://localhost:5173',                   // local dev
-    'https://your-frontend.vercel.app',        // FE Vercel 
+    'http://localhost:5173',                   
+    'https://workout-tracker-xeiz.vercel.app/',     
   ]
 }));
 
