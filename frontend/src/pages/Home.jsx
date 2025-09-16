@@ -4,7 +4,7 @@ import WorkoutForm from "../components/WorkoutForm";
 import { useWorkoutContext } from "../hooks/useWorkoutContext";
 
 const API_BASE = import.meta.env.PROD
-  ? "verps://workout-tracker-qvoz.vercel.app"
+  ? "https://workout-tracker-qvoz.vercel.app/"
   : "";
 
 export default function Home() {

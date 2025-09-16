@@ -3,7 +3,7 @@ import { Trash2 } from "lucide-react";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 
 const API_BASE = import.meta.env.PROD
-  ? "verps://workout-tracker-qvoz.vercel.app"
+  ? "https://workout-tracker-qvoz.vercel.app/"
   : "";
 
 export default function WorkoutDetails({ workout }) {

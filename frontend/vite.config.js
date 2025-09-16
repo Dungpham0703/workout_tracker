@@ -15,7 +15,7 @@ export default defineConfig({
   define: {
     __API_URL__: JSON.stringify(
       process.env.NODE_ENV === 'production'
-        ? 'verps://workout-tracker-qvoz.vercel.app' 
+        ? 'https://workout-tracker-qvoz.vercel.app/' 
         : ''
     ),
   },
