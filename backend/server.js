@@ -2,36 +2,53 @@ require('dotenv').config();
 
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
+
 const workoutRoutes = require('./routes/workouts');
 
 const app = express();
 
-// middleware
+// Middleware
 app.use(express.json());
 
+// CORS: cho local + FE deploy
+app.use(cors({
+  origin: [
+    'http://localhost:5173',                 // local dev
+    'https://your-frontend.vercel.app',      // FE Vercel (sau này sửa đúng domain của bạn)
+    'https://your-frontend.onrender.com'     // FE Render (nếu dùng)
+  ]
+}));
+
+// Logger nhỏ cho request
 app.use((req, res, next) => {
-  console.log(req.path, req.method);
+  console.log(`[${req.method}] ${req.path}`);
   next();
 });
 
-// routes
+// Routes
 app.use('/api/workouts', workoutRoutes);
 
-// health check route
+// Health check
 app.get('/api/health', (req, res) => {
   res.json({ ok: true });
 });
 
-// connect to database and start server
+// Root route 
+app.get('/', (req, res) => {
+  res.send('✅ Backend is running');
+});
+
+// Connect DB + Start server
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
     console.log('✅ Connected to MongoDB');
     const port = process.env.PORT || 4000;
     app.listen(port, () => {
-      console.log('🚀 Server running on port', port);
+      console.log(`🚀 Server running on port ${port}`);
     });
   })
   .catch((error) => {
-    console.error('❌ MongoDB connection error:', error);
+    console.error('❌ MongoDB connection error:', error.message);
   });
