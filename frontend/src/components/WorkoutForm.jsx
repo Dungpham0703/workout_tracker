@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useWorkoutContext } from "../hooks/useWorkoutContext";
 
 const API_BASE = import.meta.env.PROD
-  ? "renhttps://workout-tracker-37va.onrender.com"
+  ? "https://workout-tracker-37va.onrender.com/"
   : "";
 
 export default function WorkoutForm() {
