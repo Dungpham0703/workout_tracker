@@ -17,26 +17,18 @@ app.use(cors({
   allowedHeaders: ['Content-Type'],
 }));
 
-// Logger nhỏ cho request
 app.use((req, res, next) => {
   console.log(`[${req.method}] ${req.path}`);
   next();
 });
 
-// Routes
 app.use('/api/workouts', workoutRoutes);
 
-// Health check
-app.get('/api/health', (req, res) => {
-  res.json({ ok: true });
-});
-
-// Root route
 app.get('/', (req, res) => {
   res.send('✅ Backend is running');
 });
 
-// Connect DB + Start server
+// Connect DB 
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
