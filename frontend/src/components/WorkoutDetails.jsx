@@ -21,7 +21,6 @@ export default function WorkoutDetails({ workout }) {
         throw new Error(json.error || "Failed to delete workout");
       }
 
-      // Cập nhật context sau khi xóa
       dispatch({ type: "DELETE_WORKOUT", payload: workout });
     } catch (err) {
       console.error("Delete error:", err.message);
@@ -29,8 +28,30 @@ export default function WorkoutDetails({ workout }) {
     }
   }
 
+  async function handleUpdate() {
+    try {
+      const res = await fetch(`${API_BASE}/api/workouts/${workout._id}`, {
+        method: "PATCH",
+      });
+
+      const json = await res.json()
+
+      if(!res.ok) {
+        throw new Error(json.error || "Failed to update workout")
+      }
+
+    } catch (err) {
+      console.log(err.message)
+    }
+  }
+
   return (
     <div className="relative max-w-xl p-6 mx-auto my-6 bg-white shadow-md rounded-2xl">
+      <button
+        onClick={handleUpdate}
+        className="absolute text-yellow-500 top-3 right-3 hover:text-yellow-700"
+      >
+      </button>
       {/* Nút xoá */}
       <button
         onClick={handleDelete}
@@ -52,7 +73,6 @@ export default function WorkoutDetails({ workout }) {
         <span className="font-semibold">Reps:</span> {workout.reps}
       </p>
 
-      {/* Thời gian tạo */}
       <p className="mt-2 text-sm text-gray-500">
         {formatDistanceToNow(new Date(workout.createdAt), {
           addSuffix: true,
