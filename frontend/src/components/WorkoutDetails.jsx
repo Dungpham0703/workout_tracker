@@ -28,30 +28,8 @@ export default function WorkoutDetails({ workout }) {
     }
   }
 
-  async function handleUpdate() {
-    try {
-      const res = await fetch(`${API_BASE}/api/workouts/${workout._id}`, {
-        method: "PATCH",
-      });
-
-      const json = await res.json()
-
-      if(!res.ok) {
-        throw new Error(json.error || "Failed to update workout")
-      }
-
-    } catch (err) {
-      console.log(err.message)
-    }
-  }
-
   return (
     <div className="relative max-w-xl p-6 mx-auto my-6 bg-white shadow-md rounded-2xl">
-      <button
-        onClick={handleUpdate}
-        className="absolute text-yellow-500 top-3 right-3 hover:text-yellow-700"
-      >
-      </button>
       {/* Nút xoá */}
       <button
         onClick={handleDelete}
