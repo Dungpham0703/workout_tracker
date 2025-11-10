@@ -4,7 +4,7 @@ import WorkoutForm from "../components/WorkoutForm";
 import { useWorkoutContext } from "../hooks/useWorkoutContext";
 
 const API_BASE = import.meta.env.PROD
-  ? "https://workout-tracker-37va.onrender.com"
+  ? "http://3.107.97.252:4000"
   : "";
 
 export default function Home() {

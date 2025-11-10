@@ -3,7 +3,7 @@ import { Trash2 } from "lucide-react";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 
 const API_BASE = import.meta.env.PROD
-  ? "https://workout-tracker-37va.onrender.com"
+  ? "http://3.107.97.252:4000"
   : "";
 
 export default function WorkoutDetails({ workout }) {
