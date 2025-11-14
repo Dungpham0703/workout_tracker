@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { useWorkoutContext } from "../hooks/useWorkoutContext";
 
-const API_BASE = import.meta.env.PROD
-  ? "http://3.107.97.252:4000"
-  : "";
+const API_BASE = import.meta.env.VITE_API_INSTANCE
 
 export default function WorkoutForm() {
   const { dispatch } = useWorkoutContext();

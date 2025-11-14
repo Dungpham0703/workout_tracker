@@ -2,9 +2,9 @@ import { useWorkoutContext } from "../hooks/useWorkoutContext";
 import { Trash2 } from "lucide-react";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 
-const API_BASE = import.meta.env.PROD
-  ? "http://3.107.97.252:4000"
-  : "";
+const API_BASE = 'http://13.239.236.251:4000'
+
+{console.log(API_BASE)}
 
 export default function WorkoutDetails({ workout }) {
   const { dispatch } = useWorkoutContext();

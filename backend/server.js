@@ -25,19 +25,19 @@ app.use((req, res, next) => {
 app.use('/api/workouts', workoutRoutes);
 
 app.get('/', (req, res) => {
-  res.send('✅ Backend is running');
+  res.send('ackend is running');
 });
 
 // Connect DB 
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
-    console.log('✅ Connected to MongoDB');
+    console.log('Connected to MongoDB');
     const port = process.env.PORT || 4000;
     app.listen(port, () => {
-      console.log(`🚀 Server running on port ${port}`);
+      console.log(`Server running on port ${port}`);
     });
   })
   .catch((error) => {
-    console.error('❌ MongoDB connection error:', error.message);
+    console.error('MongoDB connection error:', error.message);
   });

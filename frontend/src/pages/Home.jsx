@@ -3,9 +3,7 @@ import WorkoutDetails from "../components/WorkoutDetails";
 import WorkoutForm from "../components/WorkoutForm";
 import { useWorkoutContext } from "../hooks/useWorkoutContext";
 
-const API_BASE = import.meta.env.PROD
-  ? "http://3.107.97.252:4000"
-  : "";
+const API_BASE = "http://13.239.236.251:4000";
 
 export default function Home() {
   const { workouts, dispatch } = useWorkoutContext();
