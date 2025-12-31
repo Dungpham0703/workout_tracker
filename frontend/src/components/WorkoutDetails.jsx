@@ -2,7 +2,7 @@ import { useWorkoutContext } from "../hooks/useWorkoutContext";
 import { Trash2 } from "lucide-react";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 
-const API_BASE = 'http://13.239.236.251:4000'
+const API_BASE = 'http://3.26.189.44:4000'
 
 {console.log(API_BASE)}
 
